@@ -1,4 +1,5 @@
 import React from "react"
+import { Link } from "gatsby"
 
 export const RegionList = ({ data }) => {
   return (
@@ -13,7 +14,9 @@ export const RegionList = ({ data }) => {
       <tbody>
         {data.map(region => (
           <tr>
-            <td>{region.name}</td>
+            <td>
+              <Link to={`/${region.name.toLowerCase()}/`}>{region.name}</Link>
+            </td>
             <td>{region.Cases}</td>
             <td>{region.Deaths}</td>
           </tr>
