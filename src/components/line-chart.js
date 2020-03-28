@@ -1,0 +1,252 @@
+import React, { useState } from "react"
+
+import { Group } from "@vx/group"
+import { LinePath, Line } from "@vx/shape"
+import { scaleTime, scaleLinear } from "@vx/scale"
+import { GlyphDot } from "@vx/glyph"
+import { AxisLeft, AxisRight, AxisBottom } from "@vx/axis"
+import { GridRows } from "@vx/grid"
+import { withTooltip, Tooltip } from "@vx/tooltip"
+import { Text } from "@vx/text"
+
+import { extent, max } from "d3-array"
+
+function numTicksForWidth(height) {
+  if (height <= 300) return 3
+  if (300 < height && height <= 600) return 5
+  return 10
+}
+
+const tickLabelSize = 13
+
+const primary = "#3D61FB"
+
+export const LineChart = withTooltip(
+  ({
+    data,
+    width,
+    height,
+    tooltipOpen,
+    tooltipLeft,
+    tooltipTop,
+    tooltipData,
+    hideTooltip,
+    showTooltip,
+    getX,
+    getY,
+    title,
+  }) => {
+    const strokeSize = 1
+    const margin = 60 + strokeSize
+
+    const xMax = width - margin * 2
+    const yMax = height - margin * 2
+
+    const xScale = scaleTime({
+      range: [0, xMax],
+      domain: extent(data, getX),
+    })
+    const maxValue = max(data, getY)
+    const yScale = scaleLinear({
+      range: [yMax, 0],
+      domain: [0, Math.ceil(maxValue * 1.1)],
+    })
+    const [tooltipTimeout, setTooltipTimeout] = useState(undefined)
+
+    return (
+      <>
+        <svg
+          width={width}
+          height={height}
+          style={{
+            boxShadow: "0 4px 6px 0 rgba(31,70,88,.04)",
+          }}
+        >
+          <rect
+            x={strokeSize}
+            y={strokeSize}
+            width={width - strokeSize * 2}
+            height={height - strokeSize * 2}
+            fill="#ffffff"
+            rx={10}
+            stroke="#dbe9f5"
+            strokeWidth={strokeSize}
+          />
+          <Group top={25}>
+            <Text
+              textAnchor="middle"
+              x={width / 2}
+              fontFamily="'Lato'"
+              fontWeight={600}
+              fontSize={20}
+              verticalAnchor="start"
+            >
+              {title}
+            </Text>
+          </Group>
+          <GridRows
+            top={margin}
+            left={margin}
+            scale={yScale}
+            stroke="#cccccc"
+            width={xMax}
+            height={yMax}
+            numTicksForWidth={numTicksForWidth(width)}
+          />
+          <Group top={margin} left={margin}>
+            <LinePath
+              data={data}
+              x={d => xScale(getX(d))}
+              y={d => yScale(getY(d))}
+              stroke={primary}
+              strokeWidth={3}
+            />
+            {data.map((d, i) => {
+              const cx = xScale(getX(d))
+              const cy = yScale(getY(d))
+              return (
+                <g key={`line-point-${i}`}>
+                  <GlyphDot
+                    cx={cx}
+                    cy={cy}
+                    r={7}
+                    opacity={d === tooltipData ? 1 : 0}
+                    fill={primary}
+                    onMouseEnter={() => {
+                      if (tooltipTimeout) {
+                        clearTimeout(tooltipTimeout)
+                        setTooltipTimeout(undefined)
+                      }
+                      showTooltip({
+                        tooltipData: d,
+                        tooltipTop: cy,
+                        tooltipLeft: cx,
+                      })
+                    }}
+                    onMouseLeave={() => {
+                      setTooltipTimeout(setTimeout(hideTooltip, 1000))
+                    }}
+                  />
+                  <GlyphDot
+                    cx={cx}
+                    cy={cy}
+                    r={4}
+                    fill={primary}
+                    onMouseEnter={() => {
+                      showTooltip({
+                        tooltipData: d,
+                        tooltipTop: cy,
+                        tooltipLeft: cx,
+                      })
+                    }}
+                    onMouseLeave={hideTooltip}
+                  />
+                </g>
+              )
+            })}
+          </Group>
+          <Group left={margin}>
+            <AxisLeft
+              scale={yScale}
+              top={margin}
+              left={0}
+              hideZero
+              stroke="#1b1a1e"
+              hideTicks
+              hideAxisLine
+              tickLabelProps={(value, index) => ({
+                fill: "#000000",
+                textAnchor: "end",
+                fontSize: tickLabelSize,
+                fontFamily: "'Lato'",
+                fontWeight: "600",
+                dx: "-0.25em",
+                dy: "0.25em",
+              })}
+              tickComponent={({ formattedValue, ...tickProps }) => (
+                <text {...tickProps}>{formattedValue}</text>
+              )}
+            />
+            <AxisBottom
+              top={height - margin}
+              left={0}
+              scale={xScale}
+              numTicks={numTicksForWidth(width)}
+              label="Dia"
+              tickFormat={date => {
+                if (date.getUTCDate() === 1) {
+                  if (date.getUTCMonth() === 1) {
+                    return date.getUTCFullYear()
+                  }
+                  return date.toLocaleString(undefined, {
+                    month: "short",
+                    timeZone: "UTC",
+                  })
+                }
+                return date.toLocaleDateString(undefined, {
+                  day: "numeric",
+                  month: "numeric",
+                })
+              }}
+            >
+              {axis => {
+                const tickRotate = -45
+                const tickColor = "#000000"
+                const axisCenter =
+                  (axis.axisToPoint.x - axis.axisFromPoint.x) / 2
+                return (
+                  <g className="my-custom-bottom-axis">
+                    {axis.ticks.map((tick, i) => {
+                      const tickX = tick.to.x + 5
+                      const tickY = tick.to.y + tickLabelSize
+                      return (
+                        <Group
+                          key={`vx-tick-${tick.value}-${i}`}
+                          className={"vx-axis-tick"}
+                        >
+                          <text
+                            transform={`translate(${tickX}, ${tickY}) rotate(${tickRotate})`}
+                            fontSize={tickLabelSize}
+                            textAnchor="middle"
+                            fontFamily="'Lato'"
+                            fontWeight="600"
+                            fill={tickColor}
+                          >
+                            {tick.formattedValue}
+                          </text>
+                        </Group>
+                      )
+                    })}
+                  </g>
+                )
+              }}
+            </AxisBottom>
+          </Group>
+        </svg>
+        {tooltipOpen && (
+          <Tooltip
+            top={tooltipTop + margin - 40}
+            left={tooltipLeft + margin - 90}
+            style={{
+              width: 60,
+              height: 30,
+              backgroundColor: "#ffffff",
+              color: "black",
+              border: "1px solid black",
+              boxShadow: "0 4px 6px 0 rgba(31,70,88,.04)",
+            }}
+          >
+            <div>{getY(tooltipData)}</div>
+            <div>
+              <small>
+                {getX(tooltipData).toLocaleDateString(undefined, {
+                  timeZone: "UTC",
+                })}
+              </small>
+            </div>
+          </Tooltip>
+        )}
+      </>
+    )
+  }
+)
