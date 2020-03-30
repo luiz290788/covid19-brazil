@@ -2,7 +2,7 @@
 title: Políticos
 ---
 
-Veja o que os nosso políticos estão falando nesse momento.
+Veja o que os nossos políticos estão falando nesse momento.
 
 <!-- endexcerpt -->
 
