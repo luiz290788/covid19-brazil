@@ -5,6 +5,7 @@ import { BaseCharts } from "../components/base-charts"
 import { BaseHeatMap } from "../components/base-heat-map"
 import { Number, formatPercentage } from "../components/number"
 import { Numbers } from "../components/numbers"
+import { RegionList } from "../components/region-list"
 
 export const query = graphql`
   query {
@@ -41,6 +42,8 @@ export default ({ data }) => {
       </Numbers>
       <BaseCharts data={totalByDate} />
       <BaseHeatMap data={totalByDate} />
+      <h3>Veja os números por estado</h3>
+      <RegionList />
     </Container>
   )
 }
