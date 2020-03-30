@@ -1,10 +1,10 @@
 import React, { useState } from "react"
 
 import { Group } from "@vx/group"
-import { LinePath, Line } from "@vx/shape"
+import { LinePath } from "@vx/shape"
 import { scaleTime, scaleLinear } from "@vx/scale"
 import { GlyphDot } from "@vx/glyph"
-import { AxisLeft, AxisRight, AxisBottom } from "@vx/axis"
+import { AxisLeft, AxisBottom } from "@vx/axis"
 import { GridRows } from "@vx/grid"
 import { withTooltip, Tooltip } from "@vx/tooltip"
 import { Text } from "@vx/text"
@@ -192,8 +192,6 @@ export const LineChart = withTooltip(
               {axis => {
                 const tickRotate = -45
                 const tickColor = "#000000"
-                const axisCenter =
-                  (axis.axisToPoint.x - axis.axisFromPoint.x) / 2
                 return (
                   <g className="my-custom-bottom-axis">
                     {axis.ticks.map((tick, i) => {
