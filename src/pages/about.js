@@ -7,10 +7,6 @@ export default () => {
       <h2>Sobre</h2>
       <p>
         Criado por{" "}
-        <a href="https://www.linkedin.com/in/jessica-ribeiro-alves/">
-          Jéssica Ribeiro Alves
-        </a>{" "}
-        e{" "}
         <a href="https://www.linkedin.com/in/luiz290788/">
           Luiz Guilherme D'Abruzzo Pereira
         </a>{" "}
