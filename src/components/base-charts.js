@@ -23,7 +23,7 @@ export const BaseCharts = ({ data }) => {
               <>
                 <div>
                   <small>
-                    {getDate(tooltipData).toLocaleDateString(undefined, {
+                    {getDate(tooltipData).toLocaleDateString('pt-BR', {
                       timeZone: "UTC",
                     })}
                   </small>
@@ -44,7 +44,7 @@ export const BaseCharts = ({ data }) => {
               <>
                 <div>
                   <small>
-                    {getDate(tooltipData).toLocaleDateString(undefined, {
+                    {getDate(tooltipData).toLocaleDateString('pt-BR', {
                       timeZone: "UTC",
                     })}
                   </small>

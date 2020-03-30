@@ -22,7 +22,7 @@ export const BaseHeatMap = ({ data }) => (
             <>
               <div>
                 <small>
-                  {bin.date.toLocaleDateString(undefined, {
+                  {bin.date.toLocaleDateString('pt-BR', {
                     timeZone: "UTC",
                   })}
                 </small>
@@ -51,7 +51,7 @@ export const BaseHeatMap = ({ data }) => (
             <>
               <div>
                 <small>
-                  {bin.date.toLocaleDateString(undefined, {
+                  {bin.date.toLocaleDateString('pt-BR', {
                     timeZone: "UTC",
                   })}
                 </small>

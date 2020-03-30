@@ -178,12 +178,12 @@ export const LineChart = withTooltip(
                   if (date.getUTCMonth() === 1) {
                     return date.getUTCFullYear()
                   }
-                  return date.toLocaleString(undefined, {
+                  return date.toLocaleString("pt-BR", {
                     month: "short",
                     timeZone: "UTC",
                   })
                 }
-                return date.toLocaleDateString(undefined, {
+                return date.toLocaleDateString("pt-BR", {
                   day: "numeric",
                   month: "numeric",
                 })
