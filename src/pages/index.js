@@ -5,7 +5,8 @@ import { BaseCharts } from "../components/base-charts"
 import { BaseHeatMap } from "../components/base-heat-map"
 import { Number, formatPercentage } from "../components/number"
 import { Numbers } from "../components/numbers"
-import { RegionList } from "../components/region-list"
+import { MapBrazil } from "../components/map"
+import { ParentSize } from "@vx/responsive"
 
 export const query = graphql`
   query {
@@ -40,10 +41,20 @@ export default ({ data }) => {
           {currentDate.Deaths / currentDate.Cases}
         </Number>
       </Numbers>
+      <ParentSize>
+        {({ width }) => (
+          <MapBrazil
+            width={width}
+            height={width}
+            bottomColor="#85C7F2"
+            topColor="#BB0A21"
+            // bottomColor="#FAB8A9"
+            // topColor="#85220C"
+          />
+        )}
+      </ParentSize>
       <BaseCharts data={totalByDate} />
       <BaseHeatMap data={totalByDate} />
-      <h3>Veja os números por estado</h3>
-      <RegionList />
     </Container>
   )
 }

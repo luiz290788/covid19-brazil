@@ -48,7 +48,7 @@ export default ({ pageContext, data }) => {
       </Numbers>
       <BaseCharts data={nodes} />
       <BaseHeatMap data={nodes} />
-      <h3>Veja os números por estado</h3>
+      <h3>Veja os números dos outros estados</h3>
       <RegionList />
     </Container>
   )
