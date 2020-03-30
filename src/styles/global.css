@@ -1,3 +1,22 @@
 html {
   font-family: "Lato", "Courier New", Courier, monospace;
+  color: #1b2f33;
+  background-color: #fefefe;
+}
+
+h1 {
+  font-weight: 600;
+  font-size: 34px;
+  margin: 10px 0;
+}
+
+h2 {
+  font-weight: 600;
+  font-size: 28px;
+  margin: 10px 0;
+}
+
+a,
+:active {
+  color: black;
 }

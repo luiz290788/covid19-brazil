@@ -19,13 +19,12 @@ function numTicksForWidth(height) {
 
 const tickLabelSize = 13
 
-const primary = "#3D61FB"
-
 export const LineChart = withTooltip(
   ({
     data,
     width,
     height,
+    tooltip,
     tooltipOpen,
     tooltipLeft,
     tooltipTop,
@@ -35,11 +34,13 @@ export const LineChart = withTooltip(
     getX,
     getY,
     title,
+    color,
   }) => {
     const strokeSize = 1
     const margin = 60 + strokeSize
+    const rightMargin = 25
 
-    const xMax = width - margin * 2
+    const xMax = width - margin - rightMargin
     const yMax = height - margin * 2
 
     const xScale = scaleTime({
@@ -49,7 +50,7 @@ export const LineChart = withTooltip(
     const maxValue = max(data, getY)
     const yScale = scaleLinear({
       range: [yMax, 0],
-      domain: [0, Math.ceil(maxValue * 1.1)],
+      domain: [0, Math.ceil(maxValue * 1.15)],
     })
     const [tooltipTimeout, setTooltipTimeout] = useState(undefined)
 
@@ -98,7 +99,7 @@ export const LineChart = withTooltip(
               data={data}
               x={d => xScale(getX(d))}
               y={d => yScale(getY(d))}
-              stroke={primary}
+              stroke={color}
               strokeWidth={3}
             />
             {data.map((d, i) => {
@@ -111,7 +112,7 @@ export const LineChart = withTooltip(
                     cy={cy}
                     r={7}
                     opacity={d === tooltipData ? 1 : 0}
-                    fill={primary}
+                    fill={color}
                     onMouseEnter={() => {
                       if (tooltipTimeout) {
                         clearTimeout(tooltipTimeout)
@@ -131,7 +132,7 @@ export const LineChart = withTooltip(
                     cx={cx}
                     cy={cy}
                     r={4}
-                    fill={primary}
+                    fill={color}
                     onMouseEnter={() => {
                       showTooltip({
                         tooltipData: d,
@@ -172,7 +173,6 @@ export const LineChart = withTooltip(
               left={0}
               scale={xScale}
               numTicks={numTicksForWidth(width)}
-              label="Dia"
               tickFormat={date => {
                 if (date.getUTCDate() === 1) {
                   if (date.getUTCMonth() === 1) {
@@ -225,25 +225,19 @@ export const LineChart = withTooltip(
         </svg>
         {tooltipOpen && (
           <Tooltip
-            top={tooltipTop + margin - 40}
-            left={tooltipLeft + margin - 90}
+            top={tooltipTop + margin - 10}
+            left={tooltipLeft + margin - 10}
             style={{
-              width: 60,
-              height: 30,
               backgroundColor: "#ffffff",
               color: "black",
               border: "1px solid black",
               boxShadow: "0 4px 6px 0 rgba(31,70,88,.04)",
+              transform: "translate(-100%, -100%)",
+              whiteSpace: "nowrap",
+              overflow: "hidden",
             }}
           >
-            <div>{getY(tooltipData)}</div>
-            <div>
-              <small>
-                {getX(tooltipData).toLocaleDateString(undefined, {
-                  timeZone: "UTC",
-                })}
-              </small>
-            </div>
+            {tooltip(tooltipData)}
           </Tooltip>
         )}
       </>

@@ -1,31 +1,52 @@
 import React from "react"
 import { graphql } from "gatsby"
+import { Container } from "../components/container"
+import { BaseCharts } from "../components/base-charts"
+import { BaseHeatMap } from "../components/base-heat-map"
+import { Number, formatPercentage } from "../components/number"
+import { Numbers } from "../components/numbers"
 
 export const query = graphql`
   query($region: String!) {
-    allCovid19BrazilCsv(filter: { Region: { eq: $region } }) {
+    allCovid19BrazilCsv(
+      filter: { Region: { eq: $region } }
+      sort: { fields: Date, order: DESC }
+    ) {
       nodes {
         Date
         Cases
         Deaths
       }
     }
+    allStatesBrazilCsv(filter: { initials: { eq: $region } }) {
+      nodes {
+        name
+        population
+      }
+    }
   }
 `
 
 export default ({ pageContext, data }) => {
-  const computed = data.allCovid19BrazilCsv.nodes.reduce(
-    (a, b) => ({
-      Cases: a.Cases + b.Cases,
-      Deaths: a.Deaths + b.Deaths,
-    }),
-    { Cases: 0, Deaths: 0 }
-  )
-  const nodes = data.allCovid19BrazilCsv.nodes
-  const latest = nodes[nodes.length - 1]
+  const nodes = data.allCovid19BrazilCsv.nodes.map(point => ({
+    ...point,
+    date: new Date(point.Date),
+  }))
+  const latest = nodes[0]
+  const { name, population } = data.allStatesBrazilCsv.nodes[0]
   return (
-    <div>
-      state {pageContext.state} Cases: {latest.Cases} Deaths: {latest.Deaths}
-    </div>
+    <Container>
+      <h2>{name}</h2>
+      <Numbers>
+        <Number title="População">{population}</Number>
+        <Number title="Casos">{latest.Cases}</Number>
+        <Number title="Mortes">{latest.Deaths}</Number>
+        <Number title="Mortalidade" formatFunction={formatPercentage}>
+          {latest.Deaths / latest.Cases}
+        </Number>
+      </Numbers>
+      <BaseCharts data={nodes} />
+      <BaseHeatMap data={nodes} />
+    </Container>
   )
 }

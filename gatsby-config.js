@@ -6,7 +6,7 @@
 
 module.exports = {
   siteMetadata: {
-    title: "Covid-19 Brazil",
+    title: "Radar Covid-19 Brasil",
   },
   plugins: [
     {
@@ -29,6 +29,7 @@ module.exports = {
         colParser: {
           Cases: "number",
           Deaths: "number",
+          population: "number",
         },
       },
     },

@@ -2,7 +2,7 @@ import React from "react"
 
 import { useStaticQuery, graphql } from "gatsby"
 
-export default () => {
+export const Header = () => {
   const data = useStaticQuery(graphql`
     query {
       site {
@@ -12,5 +12,5 @@ export default () => {
       }
     }
   `)
-  return <div>{data.site.siteMetadata.title}</div>
+  return <h1 style={{ textAlign: "center" }}>{data.site.siteMetadata.title}</h1>
 }

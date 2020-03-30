@@ -1,0 +1,8 @@
+.footer {
+  margin: 16px 0;
+  text-align: right;
+}
+
+.footer > * {
+  margin-left: 8px;
+}
