@@ -113,6 +113,7 @@ export const MapBrazil = withTooltip(
                 {customProjection.features.map(
                   ({ feature, path, centroid, ...rest }, i) => (
                     <path
+                      style={{ cursor: "pointer" }}
                       key={`map-feature-${i}`}
                       d={path}
                       fill={colorScale(casesByState[feature.id].Cases)}
