@@ -87,5 +87,6 @@ module.exports = {
         excerpt_separator: `<!-- endexcerpt -->`,
       },
     },
+    "gatsby-plugin-sitemap",
   ],
 }
