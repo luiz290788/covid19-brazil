@@ -9,7 +9,7 @@ import { geoMercator } from "d3-geo"
 import { max, min } from "d3-array"
 import { withTooltip, Tooltip } from "@vx/tooltip"
 
-const brazil = topojson.feature(topology, topology.objects.uf)
+const brazil = topojson.feature(topology, topology.objects.estados)
 const bg = "#ffffff"
 
 export const MapBrazil = withTooltip(
