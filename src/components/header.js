@@ -28,6 +28,10 @@ export const Header = () => {
           content="covid-19, covid19, corona, coronavirus, Brasil, saúde, doença, casos,
           mortes, mortalidade, radar, painel, gráficos"
         />
+        <meta
+          name="google-site-verification"
+          content="OTQj_Ow0DIvqA7lNAw4aUnHOcWp1VWvwMHR-V7TjOdM"
+        />
       </Helmet>
       <h1 style={{ textAlign: "center" }}>{data.site.siteMetadata.title}</h1>
     </>
