@@ -7,6 +7,7 @@ import { Number, formatPercentage } from "../components/number"
 import { Numbers } from "../components/numbers"
 import { MapBrazil } from "../components/map"
 import { ParentSize } from "@vx/responsive"
+import { RegionList } from "../components/region-list"
 
 export const query = graphql`
   query {
@@ -48,13 +49,12 @@ export default ({ data }) => {
             height={width}
             bottomColor="#85C7F2"
             topColor="#BB0A21"
-            // bottomColor="#FAB8A9"
-            // topColor="#85220C"
           />
         )}
       </ParentSize>
       <BaseCharts data={totalByDate} />
       <BaseHeatMap data={totalByDate} />
+      <RegionList />
     </Container>
   )
 }

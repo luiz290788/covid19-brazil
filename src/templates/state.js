@@ -4,6 +4,7 @@ import { Container } from "../components/container"
 import { BaseCharts } from "../components/base-charts"
 import { BaseHeatMap } from "../components/base-heat-map"
 import { Number, formatPercentage } from "../components/number"
+import numeral from "numeral"
 import { Numbers } from "../components/numbers"
 import { RegionList } from "../components/region-list"
 
@@ -42,6 +43,12 @@ export default ({ pageContext, data }) => {
         <Number title="População">{population}</Number>
         <Number title="Casos">{latest.Cases}</Number>
         <Number title="Mortes">{latest.Deaths}</Number>
+        <Number
+          title="Casos / 100m"
+          formatFunction={value => numeral(value).format("0.0")}
+        >
+          {latest.Cases / (population / 100000)}
+        </Number>
         <Number title="Mortalidade" formatFunction={formatPercentage}>
           {latest.Deaths / latest.Cases}
         </Number>
