@@ -7,7 +7,7 @@
 module.exports = {
   siteMetadata: {
     title: "Radar Covid-19 Brasil",
-    siteUrl: "https://covid19-brazil.netlify.com",
+    siteUrl: "http://covid19.luiz-guilherme.com",
   },
   plugins: [
     {
