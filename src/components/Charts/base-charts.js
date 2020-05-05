@@ -1,5 +1,5 @@
 import React from "react"
-import { LineChart } from "../components/line-chart"
+import { LineChart } from "./line-chart"
 import { ParentSize } from "@vx/responsive"
 
 const getCases = point => point.Cases
@@ -23,7 +23,7 @@ export const BaseCharts = ({ data }) => {
               <>
                 <div>
                   <small>
-                    {getDate(tooltipData).toLocaleDateString('pt-BR', {
+                    {getDate(tooltipData).toLocaleDateString("pt-BR", {
                       timeZone: "UTC",
                     })}
                   </small>
@@ -44,7 +44,7 @@ export const BaseCharts = ({ data }) => {
               <>
                 <div>
                   <small>
-                    {getDate(tooltipData).toLocaleDateString('pt-BR', {
+                    {getDate(tooltipData).toLocaleDateString("pt-BR", {
                       timeZone: "UTC",
                     })}
                   </small>

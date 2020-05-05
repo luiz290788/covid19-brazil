@@ -1,7 +1,7 @@
 import React from "react"
 import { ParentSize } from "@vx/responsive"
 import { WeeklyHeatMap } from "./weekly-heat-map"
-import styles from "../styles/base-heat-map.module.css"
+import styles from "../../styles/base-heat-map.module.css"
 
 export const BaseHeatMap = ({ data }) => (
   <div className={styles.heatmapContainer}>
