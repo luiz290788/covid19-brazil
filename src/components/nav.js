@@ -6,7 +6,6 @@ export const Nav = () => (
   <nav className={styles.nav}>
     <Link to="/">Home</Link>
     <Link to="/politics">Políticos</Link>
-    <Link to="/timeline">Linha do Tempo</Link>
     <Link to="/about">Sobre</Link>
   </nav>
 )

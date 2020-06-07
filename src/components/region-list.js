@@ -1,62 +1,25 @@
 import React from "react"
 import { Link } from "gatsby"
-import { useStaticQuery, graphql } from "gatsby"
 import styles from "../styles/region-list.module.css"
 
-export const RegionList = () => {
-  const statesData = useStaticQuery(graphql`
-    query {
-      allStatesBrazilCsv {
-        nodes {
-          initials
-          name
-        }
-      }
-      allCovid19BrazilCsv(sort: { fields: Date, order: DESC }, limit: 27) {
-        group(field: Date) {
-          fieldValue
-          nodes {
-            Region
-            Cases
-            Deaths
-          }
-        }
-      }
-    }
-  `)
-
-  const currentDateByState = statesData.allCovid19BrazilCsv.group[0].nodes
-    .map(region => ({
-      name: region.Region,
-      Cases: region.Cases,
-      Deaths: region.Deaths,
-    }))
-    .sort((a, b) => b.Cases - a.Cases)
-
-  const stateByInitials = statesData.allStatesBrazilCsv.nodes.reduce(
-    (states, state) => ({ ...states, [state.initials]: state.name }),
-    {}
-  )
-
+export const RegionList = ({ title, regions }) => {
   return (
     <table className={styles.regionTable}>
       <thead>
         <tr>
-          <td>Estado</td>
+          <td>{title}</td>
           <td className={styles.casesColumn}># Casos</td>
           <td className={styles.deathsColumn}># Mortes</td>
         </tr>
       </thead>
       <tbody>
-        {currentDateByState.map(region => (
+        {regions.map(region => (
           <tr>
             <td>
-              <Link to={`/${region.name.toLowerCase()}/`}>
-                {stateByInitials[region.name]}
-              </Link>
+              <Link to={region.slug}>{region.name}</Link>
             </td>
-            <td className={styles.casesColumn}>{region.Cases}</td>
-            <td className={styles.deathsColumn}>{region.Deaths}</td>
+            <td className={styles.casesColumn}>{region.lastData.cases}</td>
+            <td className={styles.deathsColumn}>{region.lastData.deaths}</td>
           </tr>
         ))}
       </tbody>

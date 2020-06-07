@@ -1,0 +1,21 @@
+.breadcrumb {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+.breadcrumb > li {
+  display: flex;
+  flex-direction: row;
+}
+
+.breadcrumb > li::after {
+  content: ">";
+  display: block;
+  margin: 0 4px;
+}
+
+.breadcrumb > li:last-child::after {
+  content: "";
+  display: none;
+}

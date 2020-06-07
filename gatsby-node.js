@@ -1,5 +1,6 @@
 const { createFilePath } = require(`gatsby-source-filesystem`)
 const path = require(`path`)
+const { string2slug } = require("./src/utils")
 
 exports.onCreateNode = ({ node, getNode, actions }) => {
   const { createNodeField } = actions
@@ -14,23 +15,45 @@ exports.onCreateNode = ({ node, getNode, actions }) => {
 }
 
 const createRegionPages = async ({ graphql, actions }) => {
-  const result = await graphql(`
-    query {
-      allCovid19BrazilCsv {
-        group(field: Region) {
-          fieldValue
-        }
+  const query = `
+  query($id: Int!) {
+    allCovidJson(filter: { parentId: { eq: $id } }) {
+      nodes {
+        name
+        id
       }
     }
-  `)
+  }
+`
+  const result = await graphql(query, { id: 76 })
 
-  result.data.allCovid19BrazilCsv.group.forEach(({ fieldValue }) =>
-    actions.createPage({
-      component: path.resolve("./src/templates/state.js"),
-      path: `/${fieldValue.toLowerCase()}`,
-      context: {
-        region: fieldValue,
-      },
+  await Promise.all(
+    result.data.allCovidJson.nodes.map(async ({ name, id }) => {
+      const parentSlug = `/${name.toLowerCase()}`
+      const idInt = parseInt(id, 10)
+      actions.createPage({
+        component: path.resolve("./src/templates/state.js"),
+        path: parentSlug,
+        context: { id, initials: name, idInt },
+      })
+
+      const childrenResult = await graphql(query, { id: idInt })
+
+      childrenResult.data.allCovidJson.nodes.map(child =>
+        actions.createPage({
+          component: path.resolve("./src/templates/city.js"),
+          path: `/${name.toLowerCase()}/${string2slug(
+            child.name.toLowerCase()
+          )}`,
+          context: {
+            id: child.id,
+            parentId: id,
+            parentIdInt: idInt,
+            parentInitials: name,
+            parentSlug,
+          },
+        })
+      )
     })
   )
 }

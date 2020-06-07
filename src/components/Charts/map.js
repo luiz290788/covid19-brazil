@@ -34,13 +34,15 @@ export const MapBrazil = withTooltip(
             name
           }
         }
-        allCovid19BrazilCsv(sort: { fields: Date, order: DESC }, limit: 27) {
-          group(field: Date) {
-            fieldValue
-            nodes {
-              Region
-              Cases
-              Deaths
+        allCovidJson(
+          sort: { fields: lastData___cases, order: DESC }
+          filter: { parentId: { eq: 76 } }
+        ) {
+          nodes {
+            initials: name
+            lastData {
+              cases
+              deaths
             }
           }
         }
@@ -48,16 +50,16 @@ export const MapBrazil = withTooltip(
     `)
 
     const colorMax = max(
-      statesData.allCovid19BrazilCsv.group[0].nodes,
-      node => node.Cases
+      statesData.allCovidJson.nodes,
+      node => node.lastData.cases
     )
     const colorMin = min(
-      statesData.allCovid19BrazilCsv.group[0].nodes,
-      node => node.Cases
+      statesData.allCovidJson.nodes,
+      node => node.lastData.cases
     )
 
-    const casesByState = statesData.allCovid19BrazilCsv.group[0].nodes.reduce(
-      (states, state) => ({ ...states, [state.Region]: state }),
+    const casesByState = statesData.allCovidJson.nodes.reduce(
+      (states, state) => ({ ...states, [state.initials]: state }),
       {}
     )
 
@@ -116,7 +118,7 @@ export const MapBrazil = withTooltip(
                       style={{ cursor: "pointer" }}
                       key={`map-feature-${i}`}
                       d={path}
-                      fill={colorScale(casesByState[feature.id].Cases)}
+                      fill={colorScale(casesByState[feature.id].lastData.cases)}
                       stroke={bg}
                       strokeWidth={0.5}
                       onClick={event => {
@@ -154,7 +156,7 @@ export const MapBrazil = withTooltip(
             }}
           >
             <div>{stateByInitials[tooltipData.id]}</div>
-            <div>{casesByState[tooltipData.id].Cases} casos</div>
+            <div>{casesByState[tooltipData.id].lastData.cases} casos</div>
           </Tooltip>
         )}
       </>

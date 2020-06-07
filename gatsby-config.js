@@ -66,6 +66,12 @@ module.exports = {
       },
     },
     {
+      resolve: "gatsby-source-filesystem",
+      options: {
+        path: `${__dirname}/src/data/covid`,
+      },
+    },
+    {
       resolve: "gatsby-transformer-csv",
       options: {
         colParser: {
@@ -75,6 +81,7 @@ module.exports = {
         },
       },
     },
+    "gatsby-transformer-json",
     {
       resolve: "gatsby-source-filesystem",
       options: {

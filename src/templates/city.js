@@ -2,13 +2,13 @@ import React from "react"
 import { graphql, Link } from "gatsby"
 import { NumbersPage } from "../components/numbers-page"
 import { StatesList } from "../components/states-list"
-import { string2slug } from "../utils"
 import { RegionList } from "../components/region-list"
+import { string2slug } from "../utils"
 
 export const query = graphql`
-  query($id: String!, $initials: String!, $idInt: Int!) {
+  query($id: String!, $parentInitials: String!, $parentIdInt: Int!) {
     covidJson(id: { eq: $id }) {
-      initials: name
+      name
       population
       lastData {
         cases
@@ -20,8 +20,8 @@ export const query = graphql`
         deaths
       }
     }
-    children: allCovidJson(
-      filter: { parentId: { eq: $idInt } }
+    siblings: allCovidJson(
+      filter: { parentId: { eq: $parentIdInt } }
       sort: { fields: lastData___cases, order: DESC }
     ) {
       nodes {
@@ -32,27 +32,30 @@ export const query = graphql`
         }
       }
     }
-    statesBrazilCsv(initials: { eq: $initials }) {
-      name
+    statesBrazilCsv(initials: { eq: $parentInitials }) {
+      parentName: name
     }
   }
 `
 
-export default ({ pageContext, data, path }) => {
+export default ({ pageContext, data }) => {
   const {
-    covidJson: { lastData, population, timeseries },
-    statesBrazilCsv: { name },
-    children: { nodes },
+    covidJson: { lastData, population, name, timeseries },
+    statesBrazilCsv: { parentName },
+    siblings: { nodes },
   } = data
-
+  const { parentSlug } = pageContext
   const citiesData = nodes.map(city => ({
     ...city,
-    slug: `${path}/${string2slug(city.name)}`,
+    slug: `${parentSlug}/${string2slug(city.name)}`,
   }))
   return (
     <NumbersPage
       currentData={lastData}
-      breadcrumb={[<Link to="/">Brasil</Link>]}
+      breadcrumb={[
+        <Link to="/">Brasil</Link>,
+        <Link to={parentSlug}>{parentName}</Link>,
+      ]}
       name={name}
       population={population}
       timeseries={timeseries}

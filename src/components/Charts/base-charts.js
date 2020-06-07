@@ -2,9 +2,9 @@ import React from "react"
 import { LineChart } from "./line-chart"
 import { ParentSize } from "@vx/responsive"
 
-const getCases = point => point.Cases
+const getCases = point => point.cases
 const getDate = point => point.date
-const getDeaths = point => point.Deaths
+const getDeaths = point => point.deaths
 
 export const BaseCharts = ({ data }) => {
   return (

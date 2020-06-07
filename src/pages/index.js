@@ -7,17 +7,20 @@ import { Number, formatPercentage } from "../components/number"
 import { Numbers } from "../components/numbers"
 import { MapBrazil } from "../components/Charts/map"
 import { ParentSize } from "@vx/responsive"
-import { RegionList } from "../components/region-list"
+import { StatesList } from "../components/states-list"
 
 export const query = graphql`
   query {
-    allCovid19BrazilCsv(sort: { fields: Date, order: ASC }) {
-      group(field: Date) {
-        fieldValue
-        nodes {
-          Region
-          Cases
-          Deaths
+    allCovidJson(filter: { id: { eq: "76" } }) {
+      nodes {
+        lastData {
+          cases
+          deaths
+        }
+        timeseries {
+          date
+          cases
+          deaths
         }
       }
     }
@@ -25,21 +28,23 @@ export const query = graphql`
 `
 
 export default ({ data }) => {
-  const groups = data.allCovid19BrazilCsv.group
-  const totalByDate = groups.map(group => ({
-    date: new Date(group.fieldValue),
-    Cases: group.nodes.reduce((sum, { Cases }) => sum + Cases, 0),
-    Deaths: group.nodes.reduce((sum, { Deaths }) => sum + Deaths, 0),
+  const {
+    lastData: { cases, deaths },
+    timeseries: timeseriesRaw,
+  } = data.allCovidJson.nodes[0]
+
+  const timeseries = timeseriesRaw.map(({ date, ...rest }) => ({
+    ...rest,
+    date: new Date(date),
   }))
-  const currentDate = totalByDate[totalByDate.length - 1]
 
   return (
     <Container>
       <Numbers>
-        <Number title="Casos">{currentDate.Cases}</Number>
-        <Number title="Mortes">{currentDate.Deaths}</Number>
+        <Number title="Casos">{cases}</Number>
+        <Number title="Mortes">{deaths}</Number>
         <Number title="Mortalidade" formatFunction={formatPercentage}>
-          {currentDate.Deaths / currentDate.Cases}
+          {deaths / cases}
         </Number>
       </Numbers>
       <ParentSize>
@@ -52,9 +57,9 @@ export default ({ data }) => {
           />
         )}
       </ParentSize>
-      <BaseCharts data={totalByDate} />
-      <BaseHeatMap data={totalByDate} />
-      <RegionList />
+      <BaseCharts data={timeseries} />
+      <BaseHeatMap data={timeseries} />
+      <StatesList />
     </Container>
   )
 }

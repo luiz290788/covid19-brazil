@@ -10,7 +10,7 @@ export const BaseHeatMap = ({ data }) => (
         <WeeklyHeatMap
           data={data.map(point => ({
             date: point.date,
-            value: point.Cases,
+            value: point.cases,
             meta: point,
           }))}
           bottomColor="#506C6D"
@@ -27,7 +27,7 @@ export const BaseHeatMap = ({ data }) => (
                   })}
                 </small>
               </div>
-              <div>{bin.meta.Cases} casos</div>
+              <div>{bin.meta.cases} casos</div>
               <div>{bin.count} novos casos</div>
             </>
           )}
@@ -39,7 +39,7 @@ export const BaseHeatMap = ({ data }) => (
         <WeeklyHeatMap
           data={data.map(point => ({
             date: point.date,
-            value: point.Deaths,
+            value: point.deaths,
             meta: point,
           }))}
           bottomColor="#77312f"
@@ -56,7 +56,7 @@ export const BaseHeatMap = ({ data }) => (
                   })}
                 </small>
               </div>
-              <div>{bin.meta.Deaths} mortes</div>
+              <div>{bin.meta.deaths} mortes</div>
               <div>{bin.count} novas mortes</div>
             </>
           )}
