@@ -83,13 +83,6 @@ module.exports = {
     },
     "gatsby-transformer-json",
     {
-      resolve: "gatsby-source-filesystem",
-      options: {
-        path: `${__dirname}/src/static-pages/`,
-      },
-    },
-    "gatsby-plugin-twitter",
-    {
       resolve: `gatsby-transformer-remark`,
       options: {
         excerpt_separator: `<!-- endexcerpt -->`,
