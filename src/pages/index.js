@@ -1,5 +1,4 @@
 import React from "react"
-import { graphql } from "gatsby"
 import { Container } from "../components/container"
 import { BaseCharts } from "../components/Charts/base-charts"
 import { BaseHeatMap } from "../components/Charts/base-heat-map"

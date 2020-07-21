@@ -3,7 +3,6 @@ import { graphql, Link } from "gatsby"
 import { NumbersPage } from "../components/numbers-page"
 import { StatesList } from "../components/states-list"
 import { RegionList } from "../components/region-list"
-import { string2slug } from "../utils"
 import { useCovidData } from "../hooks/useCovidData"
 
 export const query = graphql`

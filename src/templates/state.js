@@ -2,7 +2,6 @@ import React from "react"
 import { graphql, Link } from "gatsby"
 import { NumbersPage } from "../components/numbers-page"
 import { StatesList } from "../components/states-list"
-import { string2slug } from "../utils"
 import { RegionList } from "../components/region-list"
 import { useCovidData } from "../hooks/useCovidData"
 
