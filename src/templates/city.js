@@ -14,7 +14,6 @@ export const query = graphql`
 `
 
 export default ({ pageContext, data, ...rest }) => {
-  console.log(rest)
   const {
     statesBrazilCsv: { parentName },
   } = data
