@@ -59,4 +59,4 @@ const createRegionPages = async ({ graphql, actions }) => {
 }
 
 exports.createPages = options =>
-  Promise.all([createRegionPages].map(f => f(options)))
+  Promise.all([].map(f => f(options)))
