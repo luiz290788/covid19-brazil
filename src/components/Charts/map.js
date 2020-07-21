@@ -8,6 +8,7 @@ import topology from "../../data/uf.json"
 import { geoMercator } from "d3-geo"
 import { max, min } from "d3-array"
 import { withTooltip, Tooltip } from "@vx/tooltip"
+import { useCovidData } from "../../hooks/useCovidData"
 
 const brazil = topojson.feature(topology, topology.objects.estados)
 const bg = "#ffffff"
@@ -34,32 +35,25 @@ export const MapBrazil = withTooltip(
             name
           }
         }
-        allCovidJson(
-          sort: { fields: lastData___cases, order: DESC }
-          filter: { parentId: { eq: 76 } }
-        ) {
-          nodes {
-            initials: name
-            lastData {
-              cases
-              deaths
-            }
-          }
-        }
       }
     `)
 
+    const { data: covidData, loading } = useCovidData('list-76')
+    if (loading) {
+      return 'Loading'
+    }
+
     const colorMax = max(
-      statesData.allCovidJson.nodes,
-      node => node.lastData.cases
+      covidData,
+      node => node.cases
     )
     const colorMin = min(
-      statesData.allCovidJson.nodes,
-      node => node.lastData.cases
+      covidData,
+      node => node.cases
     )
 
-    const casesByState = statesData.allCovidJson.nodes.reduce(
-      (states, state) => ({ ...states, [state.initials]: state }),
+    const casesByState = covidData.reduce(
+      (states, state) => ({ ...states, [state.name]: state }),
       {}
     )
 
@@ -118,7 +112,7 @@ export const MapBrazil = withTooltip(
                       style={{ cursor: "pointer" }}
                       key={`map-feature-${i}`}
                       d={path}
-                      fill={colorScale(casesByState[feature.id].lastData.cases)}
+                      fill={colorScale(casesByState[feature.id].cases)}
                       stroke={bg}
                       strokeWidth={0.5}
                       onClick={event => {
@@ -156,7 +150,7 @@ export const MapBrazil = withTooltip(
             }}
           >
             <div>{stateByInitials[tooltipData.id]}</div>
-            <div>{casesByState[tooltipData.id].lastData.cases} casos</div>
+            <div>{casesByState[tooltipData.id].cases} casos</div>
           </Tooltip>
         )}
       </>

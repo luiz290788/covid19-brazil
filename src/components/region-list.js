@@ -1,10 +1,17 @@
 import React from "react"
 import { Link } from "gatsby"
 import styles from "../styles/region-list.module.css"
+import { useCovidData } from "../hooks/useCovidData"
+import { string2slug } from "../utils"
 
-export const RegionList = ({ title, regions }) => {
+const regionSlug = (region) => region.parentName === 'Brasil' ?
+  `/${string2slug(region.name)}` : `/${string2slug(region.parentName)}/${string2slug(region.name)}`
+
+export const RegionList = ({ title, parentId, nameMapping }) => {
+  let { data, loading } = useCovidData(`list-${parentId}`)
+  data = (data || []).sort((r1, r2) => r2.cases - r1.cases)
   return (
-    <table className={styles.regionTable}>
+    loading ? 'Loading' : (<table className={styles.regionTable}>
       <thead>
         <tr>
           <td>{title}</td>
@@ -13,16 +20,16 @@ export const RegionList = ({ title, regions }) => {
         </tr>
       </thead>
       <tbody>
-        {regions.map(region => (
+        {data.map(region => (
           <tr>
             <td>
-              <Link to={region.slug}>{region.name}</Link>
+              <Link to={regionSlug(region)}>{(nameMapping || {})[region.name] || region.name}</Link>
             </td>
-            <td className={styles.casesColumn}>{region.lastData.cases}</td>
-            <td className={styles.deathsColumn}>{region.lastData.deaths}</td>
+            <td className={styles.casesColumn}>{region.cases}</td>
+            <td className={styles.deathsColumn}>{region.deaths}</td>
           </tr>
         ))}
       </tbody>
-    </table>
+    </table>)
   )
 }

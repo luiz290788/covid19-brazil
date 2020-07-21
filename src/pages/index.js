@@ -8,43 +8,27 @@ import { Numbers } from "../components/numbers"
 import { MapBrazil } from "../components/Charts/map"
 import { ParentSize } from "@vx/responsive"
 import { StatesList } from "../components/states-list"
+import { useCovidData } from "../hooks/useCovidData"
 
-export const query = graphql`
-  query {
-    allCovidJson(filter: { id: { eq: "76" } }) {
-      nodes {
-        lastData {
-          cases
-          deaths
-        }
-        timeseries {
-          date
-          cases
-          deaths
-        }
-      }
-    }
-  }
-`
+export default () => {
+  const { data, loading } = useCovidData(76)
 
-export default ({ data }) => {
   const {
-    lastData: { cases, deaths },
+    lastData,
     timeseries: timeseriesRaw,
-  } = data.allCovidJson.nodes[0]
-
-  const timeseries = timeseriesRaw.map(({ date, ...rest }) => ({
+  } = data || {}
+  const timeseries = (timeseriesRaw || []).map(({ date, ...rest }) => ({
     ...rest,
     date: new Date(date),
   }))
 
   return (
-    <Container>
+    loading ? 'Loading' : (<Container>
       <Numbers>
-        <Number title="Casos">{cases}</Number>
-        <Number title="Mortes">{deaths}</Number>
+        <Number title="Casos">{lastData.cases}</Number>
+        <Number title="Mortes">{lastData.deaths}</Number>
         <Number title="Mortalidade" formatFunction={formatPercentage}>
-          {deaths / cases}
+          {lastData.deaths / lastData.cases}
         </Number>
       </Numbers>
       <ParentSize>
@@ -60,6 +44,6 @@ export default ({ data }) => {
       <BaseCharts data={timeseries} />
       <BaseHeatMap data={timeseries} />
       <StatesList />
-    </Container>
+    </Container>)
   )
 }

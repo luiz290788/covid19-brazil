@@ -17,10 +17,12 @@ exports.onCreateNode = ({ node, getNode, actions }) => {
 const createRegionPages = async ({ graphql, actions }) => {
   const query = `
   query($id: Int!) {
-    allCovidJson(filter: { parentId: { eq: $id } }) {
+    allPageIndexJson(filter: { parentId: { eq: $id } }) {
       nodes {
-        name
         id
+        name
+        parentId
+        parentName
       }
     }
   }
@@ -28,7 +30,7 @@ const createRegionPages = async ({ graphql, actions }) => {
   const result = await graphql(query, { id: 76 })
 
   await Promise.all(
-    result.data.allCovidJson.nodes.map(async ({ name, id }) => {
+    result.data.allPageIndexJson.nodes.map(async ({ name, id }) => {
       const parentSlug = `/${name.toLowerCase()}`
       const idInt = parseInt(id, 10)
       actions.createPage({
@@ -39,12 +41,10 @@ const createRegionPages = async ({ graphql, actions }) => {
 
       const childrenResult = await graphql(query, { id: idInt })
 
-      childrenResult.data.allCovidJson.nodes.map(child =>
+      childrenResult.data.allPageIndexJson.nodes.map(child =>
         actions.createPage({
           component: path.resolve("./src/templates/city.js"),
-          path: `/${name.toLowerCase()}/${string2slug(
-            child.name.toLowerCase()
-          )}`,
+          path: `/${name.toLowerCase()}/${string2slug(child.name.toLowerCase())}`,
           context: {
             id: child.id,
             parentId: id,
@@ -59,4 +59,4 @@ const createRegionPages = async ({ graphql, actions }) => {
 }
 
 exports.createPages = options =>
-  Promise.all([].map(f => f(options)))
+  Promise.all([createRegionPages].map(f => f(options)))

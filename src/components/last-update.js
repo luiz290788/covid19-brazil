@@ -1,19 +1,16 @@
 import React from "react"
-import { useStaticQuery, graphql } from "gatsby"
 import styles from "../styles/last-update.module.css"
+import { useCovidData } from "../hooks/useCovidData"
 
 export const LastUpdate = () => {
-  const data = useStaticQuery(graphql`
-    query {
-      site {
-        buildTime
-      }
-    }
-  `)
+  const { data, loading } = useCovidData('last-updated')
+  if (loading) {
+    return null
+  }
   return (
     <div className={styles.lastUpdate}>
       Última atualização:{" "}
-      {new Date(data.site.buildTime).toLocaleString("pt-BR")}
+      {new Date(data.date).toLocaleString("pt-BR")}
     </div>
   )
 }
