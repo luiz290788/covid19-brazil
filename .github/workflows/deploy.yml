@@ -20,11 +20,6 @@ jobs:
           key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
           restore-keys: |
             ${{ runner.os }}-yarn-
-      - uses: actions/cache@v2
-        id: gatsby-cache
-        with:
-          path: .cache
-          key: gatsby-cache-${{ hashFiles('**/gatsby-*.js') }}
       - name: Checkout
         uses: actions/checkout@v2
       - name: Setup Node
